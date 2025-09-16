@@ -1,0 +1,72 @@
+#include <iostream>
+using namespace std;
+
+class Queue {
+    int front, rear, size;
+    char *arr;
+public:
+    Queue(int n) {
+        size = n;
+        arr = new char[size];
+        front = 0;
+        rear = -1;
+    }
+
+    void push(char x) {
+        if (rear < size - 1) {
+            arr[++rear] = x;
+        }
+    }
+
+    void pop() {
+        if (!isEmpty()) {
+            front++;
+        }
+    }
+
+    char getFront() {
+        return arr[front];  // just return, no increment
+    }
+
+    bool isEmpty() {
+        return front > rear;
+    }
+
+    ~Queue() {
+        delete[] arr;
+    }
+};
+
+void firstNonRepeating(char exp[], int n) {
+    Queue q(n);
+    int freq[256] = {0};
+
+    for (int i = 0; i < n; i++) {
+        char c = exp[i];
+        if (c == ' ') continue;
+
+        q.push(c);
+        freq[(unsigned char)c]++;
+
+        while (!q.isEmpty() && freq[(unsigned char)q.getFront()] > 1) {
+            q.pop();
+        }
+
+        if (q.isEmpty()) cout << -1 << " ";
+        else cout << q.getFront() << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    char input[100];
+    cout << "Enter characters (with spaces if needed): ";
+    cin.getline(input, 100);
+
+    int len = 0;
+    while (input[len] != '\0') len++;
+
+    firstNonRepeating(input, len);
+
+    return 0;
+}
